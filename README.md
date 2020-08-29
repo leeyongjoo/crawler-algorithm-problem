@@ -8,7 +8,7 @@
 `requests` 모듈의 session() 함수를 이용하는 방식으로 속도 개선
 
 ## Requirements
-- [python](https://www.python.org/downloads/) 3.6⬆
+- [python](https://www.python.org/downloads/) 3.6 ⬆
 - `requests`, `bs4`, `lxml`
 
 필요 모듈 설치 방법:
