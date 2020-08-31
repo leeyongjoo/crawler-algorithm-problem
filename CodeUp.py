@@ -4,10 +4,12 @@ from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
 from modules.user_input import input_login_form, input_index
 from modules.languages import get_languages
-from typing import List
+from typing import List, Any, Tuple
 from collections import namedtuple
 
 SolvedProblem = namedtuple('SolvedProblem', ['id', 'name', 'lang_and_source'])  # lang_and_source는 여러 개
+
+
 # ToSolveProblem = namedtuple('ToSolveProblem', ['id', 'name', 'input_example', 'output_example'])
 
 
@@ -54,7 +56,7 @@ class CodeUp(object):
         soup = BeautifulSoup(req.text, 'lxml')
         lang = soup.select_one('body > main > div > div > '
                                'div.alert.alert-info.mt-1.pb-0 > p').get_text().split(' / ')[2].lower()
-        source = soup.select_one('#source').get_text()
+        source = soup.select_one('#source').get_text().replace('\r\n', '\n')
         return lang, source
 
     def _do_login(self, login_data=None) -> bool:
@@ -89,7 +91,7 @@ class CodeUp(object):
     #     idx = input_index('언어를 선택하세요: ', langs)
     #     self.json_data['language'] = langs[idx]
 
-    def get_solved_problems_by_selecting_problemset(self) -> List[SolvedProblem]:
+    def get_solved_problems_by_selecting_problemset(self) -> Tuple[Any, List[SolvedProblem]]:
         # 문제집 선택해서 해결한 문제만 가져오기
         problemsetsol_path = 'problemsetsol.php'
 
@@ -108,6 +110,7 @@ class CodeUp(object):
             if inputted_idx:
                 break
 
+        selected_problemsetsol_name = problemset_tags[inputted_idx].get_text()
         selected_problemsetsol_href = problemset_tags[inputted_idx].get('href')
 
         # 선택한 문제집 페이지 GET 요청
@@ -117,14 +120,14 @@ class CodeUp(object):
         # 선택한 문제집에서 해결한 문제만 가져오기
         problem_rows: ResultSet = soup.select('#problemset > tbody > tr')
         solved_problems: List[SolvedProblem] = []
-        for row in problem_rows[:3]:  # TODO: [:3] 없애기
+        for row in problem_rows:
             success_div: Tag = row.select_one('td:nth-child(1) > div')
             if success_div.text == 'Y':  # 해결한 문제
                 hrefs: List[str] = self.__get_my_source_href(self.__get_codeup_url(row.find('a').get('href')))
                 lang_and_source = tuple(self.__get_lang_and_source(self.__get_codeup_url(href)) for href in hrefs)
 
                 p_id = row.select_one('td:nth-child(2) > div').get_text()
-                p_name = row.select_one('td:nth-child(3) > div').get_text()
+                p_name = row.select_one('td:nth-child(3) > div').get_text().strip()
 
                 solved_problems.append(SolvedProblem(p_id, p_name, lang_and_source))
-        return solved_problems
+        return f'[{inputted_idx}] {selected_problemsetsol_name}', solved_problems

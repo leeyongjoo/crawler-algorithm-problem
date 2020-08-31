@@ -1,86 +1,45 @@
-import urllib.parse
-from typing import List
-import requests
-from modules.JSONManager import JSONManager
-from bs4 import BeautifulSoup, ResultSet
-from errors import NumNotInRangeError, IdPwNotCorrectError
-from modules.user_input import input_login_form, input_index
-
-SITE_NAME = 'codeup'
-SITE_URL = 'https://www.codeup.kr/'
-SITE_LOGIN_FROM = {
-    'user_id': '',
-    'password': '',
-}
+from CodeUp import CodeUp
+from modules.FileManager import FileManager
+from modules.JsonManager import JsonManager
 
 
-def do_login(sess: requests.Session()) -> bool:
-    """
-    로그인
-
-    :param sess: 세션
-    :return: 정상 동작 여부
-    """
-    login_url = get_codeup_url('login.php')
-
-    jm = JSONManager(SITE_NAME)
-    login_data: dict = jm.load_json_file()
-    if not login_data:
-        login_data: dict = input_login_form(SITE_LOGIN_FROM)
-
-    while True:
-        req = sess.post(login_url, data=login_data)
-        if req.text.split('\n')[-2] == 'history.go(-2);':  # -1: 오류, -2: 성공
-            print(login_data['user_id'], '로그인 성공.')
-            jm.write_json_file(login_data)
-            return True
-        else:
-            print('아이디나 비밀번호가 잘못되었습니다.')
-            login_data: dict = input_login_form(SITE_LOGIN_FROM)
-
-
-def get_codeup_url(page_name: str) -> str:
-    return urllib.parse.urljoin(SITE_URL, f'{page_name}')
-
-
-def get_solved_problem(sess: requests.Session()) -> List:
-    problemsetsol_path = 'problemsetsol.php'
-
-    # 모든 문제집 페이지 GET 요청
-    req = sess.get(get_codeup_url(problemsetsol_path))
-    soup = BeautifulSoup(req.text, 'lxml')
-    problemset_tags: ResultSet = soup.select('body > main > div > div > div.col-4 > div > a')
-    # 모든 문제집 목록 출력
-    for i, problemset_tag in enumerate(problemset_tags):
-        print(f"[{i}] {problemset_tag.get_text()}")
-    # 모든 문제집 목록 중 하나 입력
-    while True:  # 정상적인 값이 들어올 때 까지 반복
-        inputted_idx = input_index('문제집 번호를 입력하세요: ', problemset_tags)
-        if inputted_idx:
-            break
-
-    selected_problemsetsol_href = problemset_tags[inputted_idx].get('href')
-
-    # 선택한 문제집 페이지 GET 요청
-    req = sess.get(get_codeup_url(selected_problemsetsol_href))
-    soup = BeautifulSoup(req.text, 'lxml')
-
-
-
+# TODO: (아이디,제출결과) 쿼리스트링 만들어서 푼 문제 요청하기
+# 제출결과 코드
+# 2: 컴파일중 / 4: 정확한 풀이 / 5: 표현 에러 / 6: 잘못된 풀이 / 7: 시간 초과
+# 8: 메모리 초과 / 9: 출력 한계 초과 / 10: 실행 중 에러 / 11: 컴파일 에러
+# 'https://www.codeup.kr/status.php?&jresult=4&user_id=nyk700'
 
 def main():
-    # 0. 세션 생성
-    sess = requests.Session()
+    site_name = 'codeup'
 
-    # 1. 로그인
-    do_login(sess)
+    # json 파일 로드(로그인 정보)
+    jm = JsonManager()
+    json_data = jm.load_json_file(site_name)
 
-    # TODO: 2. 함수 선택
+    # CodeUp 객체 생성
+    cu = CodeUp(json_data)
 
-    # 2-1. 해결한 문제 가져오기
-    get_solved_problem(sess)
+    # 로그인 정보 파일로 저장
+    if not json_data:
+        jm.write_json_file(site_name, cu.json_data)
+
+    # TODO: 함수 선택
+
+    # 1-1. 문제집을 선택해서 해결한 문제 가져오기
+    print('<< 문제집을 선택하여 해결한 문제 가져오기 >>')
+    index_and_problemsetsol_name, solved_problems = cu.get_solved_problems_by_selecting_problemset()
+
+    # 1-2. 가져온 문제들을 문제집 폴더에 각각 파일로 저장
+    fm = FileManager(index_and_problemsetsol_name)
+    for p in solved_problems:
+        file_basename = '_'.join([p.id, p.name])
+        for i, lang_and_source in enumerate(p.lang_and_source):
+            if i > 0:
+                file_basename = ''.join([file_basename, f' ({i})'])
+            fm.write_file(file_basename, lang_and_source[1], lang_and_source[0])
+
+    # 2. 문제 번호를 입력하여 가져오기
 
 
 if __name__ == "__main__":
     main()
-    pass
