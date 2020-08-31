@@ -1,5 +1,4 @@
 extensions = {
-    'json': '.json',
     'python': '.py',
     'c': '.c',
     'c++': '.cpp',
@@ -8,7 +7,7 @@ extensions = {
 
 
 def get_languages():
-    return list(extensions.keys())[1:]
+    return list(extensions.keys())
 
 
 def get_extension(language):
