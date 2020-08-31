@@ -1,7 +1,7 @@
 # codeup-automation
 코드업 사이트 알고리즘 문제해결 자동화
 
-> [이전](https://github.com/leeyongjoo/crawler-algorithm-problem#codeup){: target="_blank"}에 로그인을 하여
+> [이전](https://github.com/leeyongjoo/crawler-algorithm-problem#codeup)에 로그인을 하여
 > 해결한 문제를 가져오기 위해 Selenium을 이용하였음.
 
 속도가 느리다는 단점이 있는 `Selenium` 사용 대신 
