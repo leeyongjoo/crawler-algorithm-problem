@@ -1,5 +1,5 @@
 .idea
-_config
+_json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
