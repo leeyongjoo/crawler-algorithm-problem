@@ -53,7 +53,7 @@ class JSONManager(object):
         return True
 
 
-def mkdir_if_not_exists(path_dir: str) -> bool:
+def mkdir_if_not_exists(path_dir: str):
     while True:
         try:
             if os.path.isdir(path_dir) is False:
