@@ -20,6 +20,9 @@ class FileManager(object):
             f.write(content)
         return True
 
+    def get_default_dir_file_list(self):
+        return os.listdir(self.dirname)
+
 
 def mkdir_if_not_exists(path_dir: str):
     while True:
