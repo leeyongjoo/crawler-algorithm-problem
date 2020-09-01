@@ -12,9 +12,9 @@ class FileManager(object):
 
     def __init__(self, *dirs):
         self.dirname = BASE_DIR / self.default_dir / '/'.join(*dirs)
+        mkdir_if_not_exists(self.dirname)
 
     def write_file(self, name, content, language) -> bool:
-        mkdir_if_not_exists(self.dirname)
         basename = remove_win_special_char(name)
         with open(self.dirname / ''.join([basename, get_extension(language)]), 'w', encoding='utf-8') as f:
             f.write(content)
