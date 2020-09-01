@@ -1,6 +1,5 @@
 .idea
-_jsons
-_downloads
+_*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
