@@ -22,3 +22,15 @@ def input_index(msg: str, check_list: list, minus=False):
         print('숫자가 아닙니다!')
     else:
         return idx
+
+
+def input_number(msg: str, minus=False):
+    try:
+        num = int(input(msg))
+        if not minus and num < 0:
+            print(f'음수입니다!')
+            return
+    except ValueError:
+        print('숫자가 아닙니다!')
+    else:
+        return num
