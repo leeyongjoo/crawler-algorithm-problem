@@ -2,9 +2,9 @@ import requests
 import urllib.parse
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
-from modules.user_input import input_login_form, input_index
+from modules.user_input import input_login_form, input_index, input_number
 from modules.languages import get_languages
-from typing import List, Any, Tuple
+from typing import List, Any, Tuple, Text
 from collections import namedtuple
 
 SolvedProblem = namedtuple('SolvedProblem', ['id', 'name', 'lang_and_source'])  # lang_and_source는 여러 개
@@ -91,8 +91,9 @@ class CodeUp(object):
     #     idx = input_index('언어를 선택하세요: ', langs)
     #     self.json_data['language'] = langs[idx]
 
-    def get_solved_problems_by_selecting_problemset(self) -> Tuple[Any, List[SolvedProblem]]:
-        # 문제집 선택해서 해결한 문제만 가져오기
+    def get_solved_problems_and_dirname_by_selecting_problemset(self) -> Tuple[List[SolvedProblem], str]:
+        """문제집 선택해서 해결한 문제만 가져오기"""
+
         problemsetsol_path = 'problemsetsol.php'
 
         # 모든 문제집 페이지 GET 요청
@@ -123,11 +124,36 @@ class CodeUp(object):
         for row in problem_rows:
             success_div: Tag = row.select_one('td:nth-child(1) > div')
             if success_div.text == 'Y':  # 해결한 문제
-                hrefs: List[str] = self.__get_my_source_href(self.__get_codeup_url(row.find('a').get('href')))
-                lang_and_source = tuple(self.__get_lang_and_source(self.__get_codeup_url(href)) for href in hrefs)
-
                 p_id = row.select_one('td:nth-child(2) > div').get_text()
                 p_name = row.select_one('td:nth-child(3) > div').get_text().strip()
 
+                problem_url = row.find('a').get('href')
+                hrefs: List[str] = self.__get_my_source_href(self.__get_codeup_url(problem_url))
+                lang_and_source = tuple(self.__get_lang_and_source(self.__get_codeup_url(href)) for href in hrefs)
+
                 solved_problems.append(SolvedProblem(p_id, p_name, lang_and_source))
-        return f'[{inputted_idx}] {selected_problemsetsol_name}', solved_problems
+        return solved_problems, f'[{inputted_idx}] {selected_problemsetsol_name}'
+
+    def get_solved_problem_by_number(self) -> SolvedProblem:
+        """문제번호로 해결한 코드 가져오기"""
+
+        problem_path = 'problem.php'
+        problem_number = input_number('문제번호를 입력하세요: ')
+
+        # 문제번호를 쿼리에 넣어서 GET 요청
+        problem_url = '?'.join([self.__get_codeup_url(problem_path), urllib.parse.urlencode({'id': problem_number})])
+        req = self.sess.get(problem_url)
+        soup = BeautifulSoup(req.text, 'lxml')
+
+        hrefs: List[str] = self.__get_my_source_href(problem_url)
+        lang_and_source = tuple(self.__get_lang_and_source(self.__get_codeup_url(href)) for href in hrefs)
+
+        p_id = str(problem_number)
+        p_name = soup.find('title').get_text().strip()
+        return SolvedProblem(p_id, p_name, lang_and_source)
+
+    def get_solved_problems_all_not_saved(self) -> List[SolvedProblem]:
+        """해결한 모든 문제 가져오기"""
+        'https://www.codeup.kr/status.php?&jresult=4&user_id=nyk700'
+
+        status_path = 'status.php'
