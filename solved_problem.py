@@ -1,3 +1,5 @@
+from typing import List
+
 from modules.CodeUp import CodeUp
 from modules.FileManager import FileManager
 from modules.JsonManager import JsonManager
@@ -19,36 +21,18 @@ def main():
         jm.write_json_file(site_name, cu.json_data)
 
     # 함수 선택
-    # print("<< 함수 선택 >>")
-    # functions = [select_problemset, input_problem_number, get_all_problems]
-    # for i, func in enumerate(functions):
-    #     print(f"{i + 1}. {func.__doc__}")
-    # function_idx = input_index('함수를 선택하세요: ', functions) - 1
-    # functions[function_idx](cu)
-
-    get_all_problems(cu)
-
-def get_all_problems(cu: CodeUp):
-    """모든 문제"""
-
-    print("<< 지금까지 해결한 모든 문제 가져오기(이미 가져온 문제는 제외) >>")
-
-    # TODO: (아이디,제출결과) 쿼리스트링 만들어서 푼 문제 요청하기
-    # 제출결과 코드
-    # 2: 컴파일중 / 4: 정확한 풀이 / 5: 표현 에러 / 6: 잘못된 풀이 / 7: 시간 초과
-    # 8: 메모리 초과 / 9: 출력 한계 초과 / 10: 실행 중 에러 / 11: 컴파일 에러
-    # 'https://www.codeup.kr/status.php?&jresult=4&user_id=nyk700'
-
-    cu.json_data['login']['user_id']
-
-
-
+    print("<< 함수 선택 >>")
+    functions = [select_problemset, input_problem_number, get_all_problems]
+    for i, func in enumerate(functions):
+        print(f"{i + 1}. {func.__doc__}")
+    function_idx = input_index('함수를 선택하세요: ', functions)
+    functions[function_idx](cu)
 
 
 def select_problemset(cu: CodeUp):
     """문제집 선택"""
 
-    print("<< 문제집 선택하여 해결한 문제 가져오기 >>")
+    print("<< 문제집 선택하여 해결한 문제만 가져오기 >>")
     # 1. 문제집을 선택해서 해결한 문제 가져오기
     solved_problems, dirname = cu.get_solved_problems_and_dirname_by_selecting_problemset()
 
@@ -90,7 +74,30 @@ def input_problem_number(cu: CodeUp):
         print(f"{sp.id} 번 문제 저장완료.")
 
 
+def get_all_problems(cu: CodeUp):
+    """모든 문제"""
+    print("<< 지금까지 해결한 모든 문제 가져오기(이미 가져온 문제는 제외) >>")
 
+    fm = FileManager(['all'])
+
+    # 이미 저장된 파일의 목록 가져오기
+    saved_file_list = fm.get_default_dir_file_list()
+
+    # 제외할 problem id 리스트 만들기
+    exclude_id_list: List[str] = [file.split('_')[0] for file in saved_file_list]
+
+    # 문제 가져오기
+    solved_problems = cu.get_solved_problems_all_not_saved(exclude_id_list)
+
+    # 파일로 저장
+    for p in solved_problems:
+        file_basename = '_'.join([p.id, p.name])
+        for i, lang_and_source in enumerate(p.lang_and_source):
+            if i > 0:
+                fm.write_file(file_basename + f' ({i})', lang_and_source[1], lang_and_source[0])
+            else:
+                fm.write_file(file_basename, lang_and_source[1], lang_and_source[0])
+    print(f"{len(solved_problems)} 개의 문제 저장완료.")
 
 
 if __name__ == "__main__":

@@ -103,7 +103,7 @@ class CodeUp(object):
 
         # 모든 문제집 목록 출력
         for i, problemset_tag in enumerate(problemset_tags):
-            print(f"[{i}] {problemset_tag.get_text()}")
+            print(f"[{i + 1}] {problemset_tag.get_text()}")
 
         # 모든 문제집 목록 중 하나 입력
         while True:  # 정상적인 값이 들어올 때 까지 반복
@@ -139,9 +139,10 @@ class CodeUp(object):
 
         problem_path = 'problem.php'
         problem_number = input_number('문제번호를 입력하세요: ')
+        qs = urllib.parse.urlencode({'id': problem_number})
 
         # 문제번호를 쿼리에 넣어서 GET 요청
-        problem_url = '?'.join([self.__get_codeup_url(problem_path), urllib.parse.urlencode({'id': problem_number})])
+        problem_url = '?'.join([self.__get_codeup_url(problem_path), qs])
         req = self.sess.get(problem_url)
         soup = BeautifulSoup(req.text, 'lxml')
 
@@ -152,8 +153,42 @@ class CodeUp(object):
         p_name = soup.find('title').get_text().strip()
         return SolvedProblem(p_id, p_name, lang_and_source)
 
-    def get_solved_problems_all_not_saved(self) -> List[SolvedProblem]:
+    def get_solved_problems_all_not_saved(self, exclude_id_list: List[str]) -> List[SolvedProblem]:
         """해결한 모든 문제 가져오기"""
-        'https://www.codeup.kr/status.php?&jresult=4&user_id=nyk700'
 
+        # 'https://www.codeup.kr/status.php?&jresult=4&user_id=아이디'
         status_path = 'status.php'
+        qs = urllib.parse.urlencode({'user_id': self.json_data['login']['user_id'],
+                                     'jresult': 4})  # 4: 정확한 풀이
+
+        req = self.sess.get('?'.join([self.__get_codeup_url(status_path), qs]))
+        soup = BeautifulSoup(req.text, 'lxml')
+
+        problem_rows: ResultSet = soup.select('#result-tab > tbody > tr')
+        solved_problems: List[SolvedProblem] = []
+        exclude_id_set = set(exclude_id_list)
+        prev_href = ''
+        while True:
+            for row in problem_rows:
+                row_a = row.select_one('td:nth-child(3) > div > a:nth-child(1)')
+                p_id = row_a.get_text()
+                if p_id in exclude_id_set:
+                    continue
+                p_name = row_a.get('title').strip()
+
+                problem_href = row_a.get('href')
+                hrefs: List[str] = self.__get_my_source_href(self.__get_codeup_url(problem_href))
+                lang_and_source = tuple(self.__get_lang_and_source(self.__get_codeup_url(href)) for href in hrefs)
+
+                solved_problems.append(SolvedProblem(p_id, p_name, lang_and_source))
+                exclude_id_set.add(p_id)
+
+            next_href = soup.select_one('body > main > div > ul > li:nth-child(3) > a').get('href')
+            req = self.sess.get(self.__get_codeup_url(next_href))
+            soup = BeautifulSoup(req.text, 'lxml')
+            problem_rows = soup.select('#result-tab > tbody > tr')
+            if prev_href == next_href:
+                break
+            else:
+                prev_href = next_href
+        return solved_problems

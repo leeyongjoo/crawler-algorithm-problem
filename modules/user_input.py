@@ -11,7 +11,7 @@ def input_login_form(before_form: Dict[str, str]) -> Dict[str, str]:
 
 def input_index(msg: str, check_list: list, minus=False):
     try:
-        idx = int(input(msg))
+        idx = int(input(msg)) - 1
         _ = check_list[idx]
         if not minus and idx < 0:
             print(f'음수입니다!')
