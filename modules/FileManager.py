@@ -10,8 +10,8 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 class FileManager(object):
     default_dir = '_downloads'  # 파일을 저장할 기본 디렉토리
 
-    def __init__(self, dir=''):
-        self.dirname = BASE_DIR / self.default_dir / dir
+    def __init__(self, *dirs):
+        self.dirname = BASE_DIR / self.default_dir / '/'.join(*dirs)
 
     def write_file(self, name, content, language) -> bool:
         mkdir_if_not_exists(self.dirname)
