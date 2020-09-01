@@ -7,7 +7,7 @@ class JsonManager(object):
     """
     json 파일을 로드하여 로그인 정보 추출, 반환 메서드 제공
     """
-    default_dir = '_json'
+    default_dir = '_jsons'
 
     def __init__(self):
         self.dirname = BASE_DIR / self.default_dir
