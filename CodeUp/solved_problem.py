@@ -1,6 +1,6 @@
 from typing import List
 
-from CodeUp.CodeUp import CodeUp
+from controllers.CodeUp import CodeUp
 from modules.FileManager import FileManager
 from modules.JsonManager import JsonManager
 from modules.user_input import input_index
@@ -10,19 +10,19 @@ from modules.user_input import input_index
 # TODO: 저장할 때마다 저장한 파일 이름 출력 f"{file_name} 저장."
 # TODO: 문제집은 마지막 저장완료 출력에서 문제집 이름도 출력
 
-def main():
-    site_name = 'codeup'
+SITE_NAME = 'codeup'
 
+def main():
     # json 파일 로드(로그인 정보)
     jm = JsonManager()
-    json_data = jm.load_json_file(site_name)
+    json_data = jm.load_json_file(SITE_NAME)
 
     # CodeUp 객체 생성
     cu = CodeUp(json_data)
 
     # 로그인 정보 파일로 저장
     if not json_data:
-        jm.write_json_file(site_name, cu.json_data)
+        jm.write_json_file(SITE_NAME, cu.json_data)
 
     # 함수 선택
     print("<< 함수 선택 >>")
@@ -41,7 +41,7 @@ def select_problemset(cu: CodeUp):
     solved_problems, dirname = cu.get_solved_problems_and_dirname_by_selecting_problemset()
 
     # 2. 가져온 문제들을 문제집 폴더에 각각 파일로 저장
-    fm = FileManager(['problemset', dirname])
+    fm = FileManager([SITE_NAME, 'problemset', dirname])
     for p in solved_problems:
         file_basename = '_'.join([p.id, p.name])
         for i, lang_and_source in enumerate(p.lang_and_source):
@@ -68,7 +68,7 @@ def input_problem_number(cu: CodeUp):
 
     # 파일로 저장
     else:
-        fm = FileManager(['problem_id'])
+        fm = FileManager([SITE_NAME, 'problem_id'])
         file_basename = '_'.join([sp.id, sp.name])
         for i, lang_and_source in enumerate(sp.lang_and_source):
             if i > 0:
@@ -82,7 +82,7 @@ def get_all_problems(cu: CodeUp):
     """모든 문제"""
     print("<< 지금까지 해결한 모든 문제 가져오기(이미 가져온 문제는 제외) >>")
 
-    fm = FileManager(['all'])
+    fm = FileManager([SITE_NAME, 'all'])
 
     # 이미 저장된 파일의 목록 가져오기
     saved_file_list = fm.get_default_dir_file_list()

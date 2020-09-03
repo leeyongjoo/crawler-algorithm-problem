@@ -99,7 +99,7 @@ class CodeUp(object):
         # 모든 문제집 페이지 GET 요청
         req = self.sess.get(self.__get_codeup_url(problemsetsol_path))
         soup = BeautifulSoup(req.text, 'lxml')
-        problemset_tags: ResultSet = soup.select('body > main > div > div > div.col-4 > div > a')
+        problemset_tags: ResultSet = soup.select('body > main > div > div > div.col-4 > div > a')[1:]
 
         # 모든 문제집 목록 출력
         for i, problemset_tag in enumerate(problemset_tags):
@@ -132,7 +132,7 @@ class CodeUp(object):
                 lang_and_source = tuple(self.__get_lang_and_source(self.__get_codeup_url(href)) for href in hrefs)
 
                 solved_problems.append(SolvedProblem(p_id, p_name, lang_and_source))
-        return solved_problems, f'[{inputted_idx}] {selected_problemsetsol_name}'
+        return solved_problems, f'[{inputted_idx + 1}] {selected_problemsetsol_name}'
 
     def get_solved_problem_by_number(self) -> SolvedProblem:
         """문제번호로 해결한 코드 가져오기"""
