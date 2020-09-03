@@ -1,10 +1,14 @@
 from typing import List
 
-from modules.CodeUp import CodeUp
+from CodeUp.CodeUp import CodeUp
 from modules.FileManager import FileManager
 from modules.JsonManager import JsonManager
-from modules.user_input import input_index, input_number
+from modules.user_input import input_index
 
+
+# TODO: 이미 저장된 문제는 안가져오도록 구현
+# TODO: 저장할 때마다 저장한 파일 이름 출력 f"{file_name} 저장."
+# TODO: 문제집은 마지막 저장완료 출력에서 문제집 이름도 출력
 
 def main():
     site_name = 'codeup'
@@ -102,4 +106,3 @@ def get_all_problems(cu: CodeUp):
 
 if __name__ == "__main__":
     main()
-    # print(select_problemset.__doc__)
