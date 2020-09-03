@@ -5,7 +5,7 @@ from modules.FileManager import FileManager
 from modules.JsonManager import JsonManager
 from modules.user_input import input_index
 
-
+# TODO: FIX!! 문제집 선택 시 1 이 안되는 오류
 # TODO: 이미 저장된 문제는 안가져오도록 구현
 # TODO: 저장할 때마다 저장한 파일 이름 출력 f"{file_name} 저장."
 # TODO: 문제집은 마지막 저장완료 출력에서 문제집 이름도 출력
@@ -17,7 +17,7 @@ def main():
     jm = JsonManager()
     json_data = jm.load_json_file(SITE_NAME)
 
-    # CodeUp 객체 생성
+    # codeup 객체 생성
     cu = CodeUp(json_data)
 
     # 로그인 정보 파일로 저장

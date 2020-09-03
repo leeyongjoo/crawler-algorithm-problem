@@ -3,7 +3,6 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
 from modules.user_input import input_login_form, input_index, input_number
-from modules.languages import get_languages
 from typing import List, Any, Tuple, Text
 from collections import namedtuple
 
