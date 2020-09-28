@@ -9,6 +9,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 class FileManager(object):
     default_dir = '_downloads'  # 파일을 저장할 기본 디렉토리
+    save_cnt = 0  # 파일 저장 카운트
 
     def __init__(self, *dirs):
         self.dirname = BASE_DIR / self.default_dir / '/'.join(*dirs)
@@ -16,8 +17,14 @@ class FileManager(object):
 
     def write_file(self, name, content, language) -> bool:
         basename = remove_win_special_char(name)
-        with open(self.dirname / ''.join([basename, get_extension(language)]), 'w', encoding='utf-8') as f:
-            f.write(content)
+        file = self.dirname / ''.join([basename, get_extension(language)])
+        if os.path.isfile(file):
+            print(f'이미 존재!: {basename}')
+            return False
+        else:
+            with open(file, 'w', encoding='utf-8') as f:
+                f.write(content)
+            self.save_cnt += 1
         return True
 
     def get_default_dir_file_list(self):

@@ -5,12 +5,8 @@ from modules.FileManager import FileManager
 from modules.JsonManager import JsonManager
 from modules.user_input import input_index
 
-# TODO: FIX!! 문제집 선택 시 1 이 안되는 오류
-# TODO: 이미 저장된 문제는 안가져오도록 구현
-# TODO: 저장할 때마다 저장한 파일 이름 출력 f"{file_name} 저장."
-# TODO: 문제집은 마지막 저장완료 출력에서 문제집 이름도 출력
-
 SITE_NAME = 'codeup'
+
 
 def main():
     # json 파일 로드(로그인 정보)
@@ -42,14 +38,17 @@ def select_problemset(cu: CodeUp):
 
     # 2. 가져온 문제들을 문제집 폴더에 각각 파일로 저장
     fm = FileManager([SITE_NAME, 'problemset', dirname])
-    for p in solved_problems:
+    is_success, save_cnt = False, 0
+    for j, p in enumerate(solved_problems, start=1):
         file_basename = '_'.join([p.id, p.name])
         for i, lang_and_source in enumerate(p.lang_and_source):
-            if i > 0:
-                fm.write_file(file_basename + f' ({i})', lang_and_source[1], lang_and_source[0])
-            else:
-                fm.write_file(file_basename, lang_and_source[1], lang_and_source[0])
-    print(f"{len(solved_problems)} 개의 문제 저장완료.")
+            is_success = fm.write_file(file_basename + (f' ({i})' if i > 0 else ''),
+                                       lang_and_source[1], lang_and_source[0])
+
+        if is_success:
+            print(f'{file_basename} 저장.')
+
+    print(f"{fm.save_cnt} 개의 문제 저장완료." if fm.save_cnt > 0 else f"이미 저장된 문제집입니다.")
 
 
 def input_problem_number(cu: CodeUp):
@@ -75,7 +74,7 @@ def input_problem_number(cu: CodeUp):
                 fm.write_file(file_basename + f' ({i})', lang_and_source[1], lang_and_source[0])
             else:
                 fm.write_file(file_basename, lang_and_source[1], lang_and_source[0])
-        print(f"{sp.id} 번 문제 저장완료.")
+        print(f"{sp.id} 번 문제 저장완료." if fm.save_cnt > 0 else f"이미 저장된 문제입니다.")
 
 
 def get_all_problems(cu: CodeUp):
@@ -101,7 +100,8 @@ def get_all_problems(cu: CodeUp):
                 fm.write_file(file_basename + f' ({i})', lang_and_source[1], lang_and_source[0])
             else:
                 fm.write_file(file_basename, lang_and_source[1], lang_and_source[0])
-    print(f"{len(solved_problems)} 개의 문제 저장완료.")
+
+    print(f"{fm.save_cnt} 개의 문제 저장완료." if fm.save_cnt > 0 else f"이미 모든 문제를 가져왔습니다.")
 
 
 if __name__ == "__main__":
