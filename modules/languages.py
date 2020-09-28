@@ -1,13 +1,24 @@
+langs = ['python3', 'java', 'javascript', 'kotlin', 'go', 'c', 'cpp', 'csharp', 'ruby', 'swift', 'scala',
+         'mysql', 'oracle']
 extensions = {
-    'python': '.py',
-    'c': '.c',
-    'c++': '.cpp',
-    'java': '.java',
+    'python3': 'py',
+    'java': 'java',
+    'javascript': 'js',
+    'kotlin': 'kt',
+    'go': 'go',
+    'c': 'c',
+    'cpp': 'cpp',
+    'csharp': 'cs',
+    'ruby': 'rb',
+    'swift': 'swift',
+    'scala': 'scala',
+    'mysql': 'sql',
+    'oracle': 'sql',
 }
 
 
-def get_extension(language):
-    return extensions[language]
+def get_extension(lang):
+    return f'.{extensions[lang]}'
 
 
 codeup_language_code = {
