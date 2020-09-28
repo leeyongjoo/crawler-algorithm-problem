@@ -19,7 +19,7 @@ class FileManager(object):
         basename = remove_win_special_char(name)
         file = self.dirname / ''.join([basename, get_extension(language)])
         if os.path.isfile(file):
-            print(f'이미 존재!: {basename}')
+            # print(f'이미 존재!: {basename}')
             return False
         else:
             with open(file, 'w', encoding='utf-8') as f:
@@ -50,3 +50,7 @@ def remove_win_special_char(before_str):
     :return: 특수문자가 제거된 문자열
     """
     return sub('[\\\/:*?"<>|]', '', before_str)
+
+
+def get_file_dirname(file_path):
+    return os.path.dirname(os.path.abspath(file_path))
