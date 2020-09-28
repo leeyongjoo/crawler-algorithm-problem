@@ -14,7 +14,7 @@ def input_index(msg: str, check_list: list, minus=False):
         idx = int(input(msg)) - 1
         _ = check_list[idx]
         if not minus and idx < 0:
-            print(f'음수입니다!')
+            print(f'0 이하의 숫자입니다!')
             return
     except IndexError:
         print('없는 숫자입니다!')

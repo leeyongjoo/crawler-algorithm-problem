@@ -107,7 +107,7 @@ class CodeUp(object):
         # 모든 문제집 목록 중 하나 입력
         while True:  # 정상적인 값이 들어올 때 까지 반복
             inputted_idx = input_index('문제집을 선택하세요: ', problemset_tags)
-            if inputted_idx:
+            if inputted_idx is not None:
                 break
 
         selected_problemsetsol_name = problemset_tags[inputted_idx].get_text()
