@@ -101,8 +101,8 @@ class CodeUp(object):
         problemset_tags: ResultSet = soup.select('body > main > div > div > div.col-4 > div > a')[1:]
 
         # 모든 문제집 목록 출력
-        for i, problemset_tag in enumerate(problemset_tags):
-            print(f"[{i + 1}] {problemset_tag.get_text()}")
+        for i, problemset_tag in enumerate(problemset_tags, start=1):
+            print(f"[{i}] {problemset_tag.get_text()}")
 
         # 모든 문제집 목록 중 하나 입력
         while True:  # 정상적인 값이 들어올 때 까지 반복

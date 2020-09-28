@@ -23,8 +23,8 @@ def main():
     # 함수 선택
     print("<< 함수 선택 >>")
     functions = [select_problemset, input_problem_number, get_all_problems]
-    for i, func in enumerate(functions):
-        print(f"{i + 1}. {func.__doc__}")
+    for i, func in enumerate(functions, start=1):
+        print(f"{i}. {func.__doc__}")
     function_idx = input_index('함수를 선택하세요: ', functions)
     functions[function_idx](cu)
 
