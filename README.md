@@ -1,4 +1,4 @@
-# algorithm-problem-automation
+# crawler-algorithm-problem
 알고리즘 문제해결 사이트(`Programmers`, `CodeUp`) 자동화
 
 ## Requirements
@@ -23,7 +23,7 @@ pip install -r requirements.txt
 (작성 예정)
 
 ### CodeUp
-> [이전](https://github.com/leeyongjoo/crawler-algorithm-problem#codeup) 방식은 `Selenium`을 이용하였음.   
+> [이전](https://github.com/leeyongjoo/crawler-algorithm-problem-old#codeup) 방식은 `Selenium`을 이용하였음.   
 > 속도가 느리다는 단점이 있는 `Selenium` 사용 대신   
 > `requests` 모듈의 `session()` 함수를 이용하여 로그인 세션을 얻는 방식으로 속도 개선
 
