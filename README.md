@@ -27,7 +27,7 @@ crawler-algorithm-problem
 │ 
 ├─ modules              : 파일 처리, 언어 선택, 사용자 입력 관련 모듈
 │ 
-├─ _downloads           : 가져온 문제 파일 디렉토리()
+├─ _downloads           : 가져온 문제 파일 디렉토리
 │  │
 │  ├─ codeup
 │  │  ├─ all            : 모든 문제
@@ -55,6 +55,11 @@ crawler-algorithm-problem
 - 언어 선택
 - 선택한 언어에 대한 모든 문제 크롤링
 
+![image](https://user-images.githubusercontent.com/46367323/95322792-04b71e80-08d8-11eb-8682-29bad43de27b.png)
+![image](https://user-images.githubusercontent.com/46367323/95322837-17315800-08d8-11eb-833f-d0be7bd4342b.png)
+
+![image](https://user-images.githubusercontent.com/46367323/95323123-9b83db00-08d8-11eb-9999-e80ce72e1480.png)
+![image](https://user-images.githubusercontent.com/46367323/95323022-71cab400-08d8-11eb-92f1-3bff343d5c56.png)
 
 ### CodeUp
 > [이전](https://github.com/leeyongjoo/crawler-algorithm-problem-old#codeup) 방식은 `Selenium`을 이용하였음.   
@@ -69,3 +74,5 @@ crawler-algorithm-problem
   3. 해결한 모든 문제 가져오기(이미 저장되어 있는 문제는 제외)
 - 가져온 파일로 저장
 
+![image](https://user-images.githubusercontent.com/46367323/95323818-bc98fb80-08d9-11eb-92da-834f82bac783.png)
+![image](https://user-images.githubusercontent.com/46367323/95323809-b9057480-08d9-11eb-8c64-386539eee338.png)
