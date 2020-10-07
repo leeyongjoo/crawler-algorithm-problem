@@ -8,7 +8,7 @@ from modules.user_input import input_index
 SITE_NAME = 'codeup'
 
 
-def main():
+def solved_problem():
     # json 파일 로드(로그인 정보)
     jm = JsonManager()
     json_data = jm.load_json_file(SITE_NAME)
@@ -105,4 +105,4 @@ def get_all_problems(cu: CodeUp):
 
 
 if __name__ == "__main__":
-    main()
+    solved_problem()

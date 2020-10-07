@@ -7,7 +7,7 @@ from modules.JsonManager import JsonManager
 SITE_NAME = 'programmers'
 
 
-def main():
+def to_solve_problem():
     # 해결할 문제 가져오기
 
     # codeup 객체 생성
@@ -49,4 +49,4 @@ def login():
 
 
 if __name__ == "__main__":
-    main()
+    to_solve_problem()

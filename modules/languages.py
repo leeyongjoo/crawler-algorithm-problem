@@ -2,6 +2,7 @@ langs = ['python3', 'java', 'javascript', 'kotlin', 'go', 'c', 'cpp', 'csharp', 
          'mysql', 'oracle']
 extensions = {
     'python3': 'py',
+    'python': 'py',
     'java': 'java',
     'javascript': 'js',
     'kotlin': 'kt',
