@@ -136,7 +136,7 @@ def make_file_content(problem_url, lang):
         try:
             p_example_table = soup.select('#tour2 > div > div > table')[-1]
         except IndexError:
-            test_code_list = 'pass'
+            test_code = f'pass'
         else:
             p_example_tr_list = p_example_table.select('tbody > tr')
             p_example_td_list = [e.find_all('td') for e in p_example_tr_list]
@@ -155,9 +155,8 @@ def make_file_content(problem_url, lang):
             for i, o in zip(p_input_list, p_output_list):
                 test_code_list.append('print(solution({}))'.format(', '.join(i)))
                 test_code_list.append('print(solution({}) == {})'.format(', '.join(i), o))
-
-        test_code = f'\n{" " * 4}'.join(test_code_list)
+            test_code = f'\n{" " * 4}'.join(test_code_list)
 
         # 파일 내용
-        file_content = f'# {problem_url}\n{code}\n\nif __name__ == "__main__":\n{" " * 4}{test_code}'
+        file_content = f'# {problem_url}\n{code}\n\n\nif __name__ == "__main__":\n{" " * 4}{test_code}\n'
         return file_content
