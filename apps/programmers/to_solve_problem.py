@@ -14,7 +14,8 @@ def to_solve_problem():
     pro = Programmers()
 
     # 언어 선택
-    lang = select_language()
+    # lang = select_language()
+    lang = 'python3'  # 일단 기본언어 python3으로 설정
 
     # 해결할 문제 가져오기
     to_solve_problems = pro.get_to_solve_problem(lang)

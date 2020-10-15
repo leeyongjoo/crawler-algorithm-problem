@@ -52,7 +52,7 @@ crawler-algorithm-problem
 
 ### Programmers
 [`to_solved_problem.py`](https://github.com/leeyongjoo/crawler-algorithm-problem/blob/master/apps/programmers/to_solved_problem.py)
-- 언어 선택
+- 언어 선택 (우선 기본적인 언어를 'python3'으로 설정 -> 추후에 다른 언어에 관한 코드 구현할 것)
 - 선택한 언어에 대한 모든 문제 크롤링
 
 ![image](https://user-images.githubusercontent.com/46367323/95322792-04b71e80-08d8-11eb-8682-29bad43de27b.png)
