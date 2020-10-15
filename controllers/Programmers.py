@@ -133,9 +133,8 @@ def make_file_content(problem_url, lang):
         p_input_list = []
         p_output_list = []
 
-        try:
-            p_example_table = soup.select('#tour2 > div > div > table')[-1]
-        except IndexError:
+        p_example_table = soup.find('h5', text='입출력 예').find_next('table')
+        if p_example_table is None:
             test_code = f'pass'
         else:
             p_example_tr_list = p_example_table.select('tbody > tr')
@@ -160,3 +159,8 @@ def make_file_content(problem_url, lang):
         # 파일 내용
         file_content = f'# {problem_url}\n{code}\n\n\nif __name__ == "__main__":\n{" " * 4}{test_code}\n'
         return file_content
+
+
+if __name__ == "__main__":
+    print(make_file_content('https://programmers.co.kr/learn/courses/30/lessons/67256?language=python3', 'python3'))
+    print(make_file_content('https://programmers.co.kr/learn/courses/30/lessons/12925?language=python3', 'python3'))
