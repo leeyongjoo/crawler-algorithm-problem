@@ -133,11 +133,11 @@ def make_file_content(problem_url, lang):
         p_input_list = []
         p_output_list = []
 
-        p_example_table = soup.find('h5', text='입출력 예').find_next('table')
-        if p_example_table is None:
+        p_example_table = soup.find('h5', text='입출력 예')
+        if p_example_table is None or p_example_table.find_next('table') is None:
             test_code = f'pass'
         else:
-            p_example_tr_list = p_example_table.select('tbody > tr')
+            p_example_tr_list = p_example_table.find_next('table').select('tbody > tr')
             p_example_td_list = [e.find_all('td') for e in p_example_tr_list]
 
             for *i, o in p_example_td_list:
